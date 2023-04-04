@@ -1,15 +1,29 @@
 let color = "black";
+let click = false;
 
 document.addEventListener("DOMContentLoaded", function() {
   let board = document.querySelector(".board");
   board.style.gridTemplateColumns = "repeat(16, 1fr)";
   board.style.gridTemplateRows = "repeat(16, 1fr)";
   createBoard(16);
+
+  document.querySelector("body").addEventListener("click", function(e) {
+    if (e.target.tagName != "BUTTONS") {
+      click = !click;
+      let draw = document.querySelector("#draw");
+      if (click) {
+        draw.innerHTML = "You are allowed to draw";
+      } else {
+        draw.innerHTML = "You are not allowed to draw";
+      }
+    }
+  });
+  
   let btn_popup = document.querySelector("#popup");
-  btn_popup.addEventListener("click", function(){
+  btn_popup.addEventListener("click", function() {
     let size = getSize();
     createBoard(size);
-  })
+  });
 });
 
 function createBoard(size) {
@@ -20,7 +34,7 @@ function createBoard(size) {
 
   for (let i = 0; i < numDivs; i++) {
     let div = document.createElement("div");
-    div.addEventListener("mouseover", colorDiv)
+    div.addEventListener("mouseover", colorDiv);
     board.insertAdjacentElement("beforeend", div);
   }
 }
@@ -30,11 +44,9 @@ function getSize() {
   let message = document.querySelector("#message");
   if (input === "") {
     message.innerHTML = "Please provide a number";
-  }
-  else if (input < 0 || input > 100) {
+  } else if (input < 0 || input > 100) {
     message.innerHTML = "Provide a number between 1 and 100";
-  }
-  else {
+  } else {
     createBoard(input);
     message.innerHTML = "Now you can play";
     return input;
@@ -42,6 +54,7 @@ function getSize() {
 }
 
 function colorDiv() {
+  if (click) {
     if (color === "random") {
       let randomColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
       this.style.backgroundColor = randomColor;
@@ -49,16 +62,13 @@ function colorDiv() {
       this.style.backgroundColor = "black";
     }
   }
-  
-  
-  
-  
-  
+}
 
 function setColor(colorChoice) {
   color = colorChoice;
 }
-function resetBoard(){
-    let divs = document.querySelectorAll(".board div");
-    divs.forEach((div) => div.style.backgroundColor = "white");
-  }
+
+function resetBoard() {
+  let divs = document.querySelectorAll(".board div");
+  divs.forEach((div) => (div.style.backgroundColor = "white"));
+}
